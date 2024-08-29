@@ -1,8 +1,10 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateUsrUrlDto } from './create-usr-url.dto';
+// eslint-disable-next-line prettier/prettier
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateUsrUrlDto extends PartialType(CreateUsrUrlDto) {
+export class ResponseUsrUrlDto {
+  @ApiProperty({ example: 'uuid' })
+  id: string;
+
   @ApiProperty({ example: 'string' })
   userId: string;
 

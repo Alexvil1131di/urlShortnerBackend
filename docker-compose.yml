@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shortUrlDataBase
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  nestjs-api:
+    build: .
+    container_name: nestjs-api
+    working_dir: /app
+    command: sh -c "npm install && npx prisma migrate dev --name init && npm run build && npm run start:prod"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      DATABASE_URL: "mysql://root:root@db:3306/shortUrlDataBase?connect_timeout=300"
+      SALT: "10"
+      JWT_SECRET: "SecretTest"    
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3001"
+
+volumes:
+  mysql_data:
+
+
